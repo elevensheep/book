@@ -26,7 +26,7 @@ public class MyUsersDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var result = userRepository.findByUserName(username);
+        var result = userRepository.findByUsername(username);
         if(result.isEmpty()){
             throw new UsernameNotFoundException(username + "라는 아이디를 찾을 수 없습니다.");
         }
@@ -34,7 +34,7 @@ public class MyUsersDetailsService implements UserDetailsService {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("일반회원"));
 
-        return new User(user.getUserName(), user.getUserPassword(), authorities);
+        return new User(user.getUsername(), user.getUserPassword(), authorities);
     }
 
 }

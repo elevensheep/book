@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * 📌 컨트롤러 역할 정리
  * ✅ BookController (/api/books) 책 정보 기반 추천
- * GET /api/books?search= -> 도서 검색(제목 or 키워드)
- * GET /api/books?category -> 도서 카테고리 별 도서 조회 (에세이, 문학, 시...)
+ * GET /api/books?search= -> 도서 검색(제목 or 키워드), 검색창 사용
+ * GET /api/books?category -> 도서 카테고리 별 도서 조회 (에세이, 문학, 시...), 버튼?
  * GET /api/books?isbn= -> 도서 상세정보
  *
  * ✅ RecommendController (/api/recommendations) 뉴스 정보 기반 추천

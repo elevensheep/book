@@ -18,10 +18,11 @@ public class TbBookController {
     private final TbBookService tbBookService;
 
 
+    // http://localhost:8080/search?query=
     @GetMapping("/search")
     public String fetchBooks(@RequestParam(name = "query") String query) {
 
-        tbBookService.fetchAndSaveAllBooks(query);
+        tbBookService.fetchAndSaveData(query);
 
         return query;
     }

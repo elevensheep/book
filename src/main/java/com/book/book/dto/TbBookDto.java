@@ -3,12 +3,14 @@ package com.book.book.dto;
 import com.book.book.entity.TbBook;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
 @Setter
+@ToString
 public class TbBookDto {
     private int total;  // 📌 API 응답에 있는 total 필드 추가
     private List<Item> items;  // 책 정보 리스트

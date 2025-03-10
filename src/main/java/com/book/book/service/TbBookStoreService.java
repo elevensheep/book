@@ -65,9 +65,10 @@ public class TbBookStoreService {
 
     // JAXB를 이용해 XML을 DTO로 변환
     private TbBookStoreResponseDto parseXml(String xmlResponse) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(TbBookStoreResponseDto.class);
-        Unmarshaller unmarshaller = context.createUnmarshaller();
-        StringReader reader = new StringReader(xmlResponse);
+        JAXBContext context = JAXBContext.newInstance(TbBookStoreResponseDto.class);  //  TbBookStoreResponseDto 클래스를 XML과 매핑하는 컨텍스트를 생성
+        Unmarshaller unmarshaller = context.createUnmarshaller();  // XML 데이터를 TbBookStoreResponseDto 객체로 변환
+        StringReader reader = new StringReader(xmlResponse);  // StringReader: XML 데이터를 문자 스트림으로 읽을 수 있게 해주는 클래스. xmlResponse라는 XML 문자열을 StringReader로 감싸서 읽을 수 있게 함
+
         return (TbBookStoreResponseDto) unmarshaller.unmarshal(reader);
     }
 }
