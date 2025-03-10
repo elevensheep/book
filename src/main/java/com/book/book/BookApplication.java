@@ -20,10 +20,14 @@ public class BookApplication implements CommandLineRunner {
 	}
 
 	@Override
-	public void run(String ...args) throws Exception {
+	public void run(String... args) throws Exception {
 		if (args.length > 0) {
 			String itemId = args[0];  // 첫 번째 파라미터로 itemId를 가져옴
-			tbBookStoreService.fetchAndSaveData(itemId);
+
+			// 비동기 메서드를 호출하고, subscribe()로 실행을 시작합니다.
+			tbBookStoreService.fetchAndSaveData(itemId)
+					.doOnTerminate(() -> System.out.println("API 호출 및 데이터 저장 작업이 종료되었습니다."))
+					.subscribe(); // 비동기 처리 시작
 		} else {
 			System.out.println("itemId 파라미터가 필요합니다.");
 		}
