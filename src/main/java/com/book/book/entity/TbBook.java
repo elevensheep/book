@@ -13,7 +13,7 @@ import lombok.*;
 public class TbBook {
     @Id
     @Column(name = "books_isbn")
-    private Long bookIsbn; // ISBN
+    private String bookIsbn; // ISBN
 
     @Column(name="books_title")
     private String bookTitle;
@@ -30,7 +30,7 @@ public class TbBook {
 
     @Column(name = "books_description")
     @Lob // 대용량 텍스트 데이터임을 명시
-    private String bookDscription;
+    private String bookDescription;
 
     @Column(name = "books_category")
     private String bookCategory;

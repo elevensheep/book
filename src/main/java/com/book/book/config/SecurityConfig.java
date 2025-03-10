@@ -27,7 +27,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) //  프론트엔드와 백엔드가 다른 포트를 사용할 때 CORS와 관련된 문제를 피하기 위해 CSRF 보호를 비활성화
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/signup").permitAll() // 로그인하지 않은 사용자도 접근 가능
+                        .requestMatchers("/login", "/signup", "/search").permitAll() // 로그인하지 않은 사용자도 접근 가능
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 )
                 .formLogin(form -> form
