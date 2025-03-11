@@ -20,8 +20,8 @@ public class TbUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(name ="users_name", unique = true, nullable = false)
-    private String username; // 아이디
+    @Column(name ="user_uuid", unique = true, nullable = false)
+    private String userUuid; // 아이디
 
     @Column(name = "users_nickname", unique = true, nullable = false)
     private String userNickname;  // 별명

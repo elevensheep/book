@@ -1,5 +1,6 @@
 package com.book.book.jwt;
 
+import com.book.book.dto.CustomUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
@@ -20,13 +22,19 @@ public class JwtUtil {
 
     // JWT 만들어주는 함수
     public static String createToken(Authentication auth){
-        var user = (User) auth.getPrincipal();
+        CustomUser customUser = (CustomUser) auth.getPrincipal();
+
+        var authorities = auth.getAuthorities().stream().map(a -> a.getAuthority())
+                .collect(Collectors.joining(","));
+
+
         // .claim(이름, 값)으로 JWT에 데이터 추가 가능
         String jwt = Jwts.builder()
-                .claim("username", "")
-                .claim("userNickname", "")
+                .claim("userUuid", customUser.getUserUuid())
+                .claim("userNickname", customUser.getUserNickname())
+                .claim("authorities", authorities)
                 .issuedAt(new Date(System.currentTimeMillis()))  // 발행 일자
-                .expiration(new Date(System.currentTimeMillis() + 100000))  // 유효기간 1000초
+                .expiration(new Date(System.currentTimeMillis() + 3600000))  // 유효기간 1시간(3600초)
                 .signWith(key)
                 .compact();
 
