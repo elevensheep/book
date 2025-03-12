@@ -18,6 +18,7 @@ public class CorsConfig {
                         .allowedOrigins("http://localhost:3000")  // 프론트엔드 URL 허용
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowCredentials(true)  // 인증 정보 포함 (쿠키 허용)
+                        .allowedHeaders("*")
                         .maxAge(3600);
             }
         };

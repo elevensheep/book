@@ -49,6 +49,23 @@ public class TbUserController {
             var jwt = JwtUtil.createToken(SecurityContextHolder.getContext().getAuthentication());
             System.out.println("Generated JWT: " + jwt);
 
+            // JWT와 userUuid를 쿠키에 저장
+            Cookie jwtCookie = new Cookie("jwt", jwt);
+            jwtCookie.setHttpOnly(true); // JavaScript에서 접근하지 못하도록
+            jwtCookie.setPath("/"); // 모든 경로에서 접근 가능
+            jwtCookie.setSecure(false);  // HTTP에서도 전송되도록
+            jwtCookie.setMaxAge(60 * 60 * 24); // 쿠키 만료 시간 (1일)
+//            jwtCookie.setAttribute("SameSite", "None");  // ✅ 크로스 오리진에서도 전송 가능
+            response.addCookie(jwtCookie);
+
+            Cookie userUuidCookie = new Cookie("userUuid", data.get("userUuid"));
+            userUuidCookie.setHttpOnly(true);
+            userUuidCookie.setPath("/");
+            userUuidCookie.setSecure(false);  // HTTP에서도 전송되도록
+            userUuidCookie.setMaxAge(60 * 60 * 24); // 쿠키 만료 시간 (1일)
+//            userUuidCookie.setAttribute("SameSite", "None");  // ✅ 크로스 오리진에서도 전송 가능
+            response.addCookie(userUuidCookie);
+
             // 세션 ID를 반환하는 예시
             // 로그인 성공 시 JWT와 사용자 UUID를 반환
             return ResponseEntity.ok(Map.of(
@@ -161,43 +178,4 @@ public class TbUserController {
         return "";
     }
 
-    @GetMapping("/bookmark")
-    public void bookmark(Authentication auth) {
-        CustomUser user = (CustomUser) auth.getPrincipal();
-        System.out.println(user);
-        System.out.println(user.getUserUuid());
-        System.out.println(user.getUserNickname());
-
-    }
-
-    @GetMapping("/")
-    public void home(Authentication auth, HttpServletRequest request) {
-//        if (auth != null) {
-//            System.out.println("로그인 됨");
-//            System.out.println(auth.getPrincipal());  // 로그인한 경우
-//            System.out.println(auth.getName());  // 로그인한 경우
-//        } else {
-//            System.out.println("로그인되지 않은 사용자입니다.");
-//        }
-
-        // 요청에서 쿠키 배열을 가져옴
-        Cookie[] cookies = request.getCookies();
-
-        // 쿠키 배열이 존재하는지 체크
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                // 쿠키 이름과 값을 출력
-                System.out.println("쿠키 이름: " + cookie.getName());
-                System.out.println("쿠키 값: " + cookie.getValue());
-
-                // jwt 쿠키를 찾고 싶다면
-                if ("jwt".equals(cookie.getName())) {
-                    System.out.println("JWT 쿠키 값: " + cookie.getValue());
-                }
-            }
-        } else {
-            System.out.println("쿠키가 없습니다.");
-        }
-
-    }
 }

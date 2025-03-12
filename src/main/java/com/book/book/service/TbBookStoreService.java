@@ -1,9 +1,6 @@
 package com.book.book.service;
 
-import com.book.book.dto.TbBookStoreDto;
 import com.book.book.dto.TbBookStoreResponseDto;
-import com.book.book.entity.TbBookStore;
-import com.book.book.repository.TbBookStoreRepository;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -14,7 +11,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.io.StringReader;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

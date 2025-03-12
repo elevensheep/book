@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -28,6 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
+    private final JwtFilter jwtFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -49,13 +51,15 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 비활성화
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**"
-//                                "/login", "/signup"
+                        .requestMatchers(
+//                                "/**"
+                                "/login", "/signup"
                         ).permitAll() // 로그인 및 회원가입 URL 허용
                         .anyRequest().authenticated()) // 나머지 요청은 인증 필요
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))) // 인증 실패 시 401 응답
-                .addFilterBefore(new JwtFilter(), ExceptionTranslationFilter.class); // JWT 필터 추가
+                            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);  // 필터 체인에 추가
+//                .addFilterBefore(new JwtFilter(), ExceptionTranslationFilter.class); // JWT 필터 추가
 //                .addFilter(customLoginFilter); // 커스텀 로그인 필터 추가
 
         http.logout(logout -> logout.logoutUrl("/logout"));

@@ -4,8 +4,10 @@ import com.book.book.dto.BookWithKeywordsDTO;
 import com.book.book.dto.TbBookStoreDto;
 import com.book.book.entity.*;
 import com.book.book.repository.TbBookRepository;
+import com.book.book.service.AuthenticationService;
 import com.book.book.service.TbBookService;
 import com.book.book.service.TbBookStoreService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,6 +28,23 @@ public class TbBookController {
     private final TbBookService tbBookService;
     private final TbBookRepository tbBookRepository;
     private final TbBookStoreService tbBookStoreService;
+    private final AuthenticationService authenticationService;
+
+    @GetMapping("/")
+    public ResponseEntity<?> home(HttpServletRequest request) {
+        // 인증 서비스 사용하여 userUuid를 추출
+        String userUuid = authenticationService.validateJwtAndExtractUserUuid(request);
+
+        System.out.println("home userUuid : " + userUuid);
+        // userUuid가 null이면 인증되지 않은 상태
+        if (userUuid == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        // 사용자 정보를 반환 (필요에 따라 추가 정보도 반환 가능)
+        return ResponseEntity.ok(Map.of("message", "로그인 성공", "userUuid", userUuid));
+
+    }
 
     // http://localhost:8080/books/search?search=검색어, 도서 검색(제목) - 검색창 사용
     // full text index (n-gram parser 이용)쓸거임
@@ -55,9 +75,9 @@ public class TbBookController {
 
     }
 
-    // http://localhost:8080books/category/{category}, 도서 카테고리별 조회 (에세이, 문학, 시...) - 버튼 사용
+    // http://localhost:8080/books/category/{category}, 도서 카테고리별 조회 (에세이, 문학, 시...) - 버튼 사용
     @GetMapping("books/category/{category}")
-    public ResponseEntity<?> searchByCategory(@PathVariable String category) {
+    public ResponseEntity<?> searchByCategory(@PathVariable(name = "category") String category) {
         // tb_books 테이블에서 카테고리 일치하는거 다 가져와
         List<TbBook> result = tbBookRepository.findAllByBookCategory(category);
 

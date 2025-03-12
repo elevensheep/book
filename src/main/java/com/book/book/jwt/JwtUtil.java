@@ -2,6 +2,7 @@ package com.book.book.jwt;
 
 import com.book.book.dto.CustomUser;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -46,5 +47,34 @@ public class JwtUtil {
         Claims claims = Jwts.parser().verifyWith(key).build()
                 .parseClaimsJws(token).getPayload();
         return claims;
+    }
+
+
+    public String getUserUuidFromToken(String token) {
+        try {
+            Claims claims = Jwts.parser()  // JwtParser 사용
+                    .setSigningKey(key)  // 비밀 키 설정
+                    .build()  // JwtParserBuilder 생성
+                    .parseClaimsJws(token)  // JWT 파싱
+                    .getBody();  // Claims 객체 반환
+
+            return claims.getSubject();  // userUuid를 subject로 설정했다고 가정
+        } catch (JwtException | IllegalArgumentException e) {
+            // JWT 파싱 중 오류가 발생하면 null을 반환하거나 예외 처리
+            return null;
+        }
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser()  // JwtParser 사용
+                    .setSigningKey(key)  // 비밀 키 설정
+                    .build()  // JwtParserBuilder 생성
+                    .parseClaimsJws(token);  // JWT 파싱 (검증)
+            return true;  // 검증이 성공하면 true 반환
+        } catch (JwtException | IllegalArgumentException e) {
+            // JWT 검증 실패 시 false 반환
+            return false;
+        }
     }
 }
