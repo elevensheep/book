@@ -16,7 +16,7 @@ public class TbBookService {
 
     // TbBook을 조회한 후 자동으로 관련된 키워드들을 함께 가져오는 방식
     public TbBook getBookWithKeywords(String isbn) {
-        TbBook tbBook = tbBookRepository.findByIsbn(isbn);
+        TbBook tbBook = tbBookRepository.findByBookIsbn(isbn);
 
         /**
          * TbBook에서 @OneToMany 관계로 TbBookKeyword를 연결했기 때문에, tbBook.getKeywords()를 호출하면 연관된 키워드들이 자동으로 로딩됩니다.

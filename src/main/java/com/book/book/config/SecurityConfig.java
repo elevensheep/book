@@ -49,7 +49,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 비활성화
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/signup").permitAll() // 로그인 및 회원가입 URL 허용
+                        .requestMatchers("/**"
+//                                "/login", "/signup"
+                        ).permitAll() // 로그인 및 회원가입 URL 허용
                         .anyRequest().authenticated()) // 나머지 요청은 인증 필요
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))) // 인증 실패 시 401 응답
