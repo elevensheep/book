@@ -2,6 +2,7 @@ package com.book.book.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.book.book.entity.*;
 
 @Entity
 @Setter
@@ -18,12 +19,11 @@ public class TbBookKeyword {
 
     @Column(name = "booksKeyword_keyword")
     private String bookKeyword;
-
-
-    // 근데 왜 2개지
+//
 //    @Column(name = "books_isbn", insertable = false, updatable = false) // 읽기 전용 설정
 //    private String bookIsbn;
 
+    // 각 키워드는 하나의 책에만 속하지만, 하나의 책은 여러 개의 키워드를 가질 수 있는 구조
     @ManyToOne
     @JoinColumn(name = "books_isbn")
     private TbBook book; // isbn

@@ -3,6 +3,8 @@ package com.book.book.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Setter
 @Getter
@@ -34,5 +36,9 @@ public class TbBook {
 
     @Column(name = "books_category")
     private String bookCategory;
+
+    // 책은 여러 키워드를 가질 수 있음. 데이터를 조회할 때, @OneToMany : TbBook을 조회하고 해당 책의 키워드를 함께 포함시키는 방법
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)  // Lazy loading 적용
+    private List<TbBookKeyword> keywords;
 
 }

@@ -21,7 +21,7 @@ public class TbRecommend {
     private Long recommendId;
 
     @ManyToOne
-    @JoinColumn(name = "booksKeyword_keyword")
+    @JoinColumn(name = "booksKeyword_id")
     private TbBookKeyword bookKeyword;  // ISBN
 
     @ManyToOne

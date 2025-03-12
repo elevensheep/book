@@ -18,8 +18,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
+
+
+
 
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")  // CORS 직접 지정
 @RestController
