@@ -7,6 +7,7 @@ import com.book.book.repository.TbBookRepository;
 import com.book.book.service.TbBookService;
 import com.book.book.service.TbBookStoreService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,46 +19,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * GET
- * /api/books?search=검색어
- *
- * Query String
- *
- * 도서 검색(제목 or 키워드) - 검색창 사용
- *
- *
- *
- * GET
- *
- * /api/books/category/{category}
- *
- * Path Variable
- *
- * 도서 카테고리별 조회 (에세이, 문학, 시...) - 버튼 사용
- *
- *
- *
- * GET
- *
- * /api/books/{isbn}
- *
- * Path Variable
- *
- * 특정 ISBN의 도서 상세 정보 조회
- */
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/books")
 public class TbBookController {
     private final TbBookService tbBookService;
     private final TbBookRepository tbBookRepository;
     private final TbBookStoreService tbBookStoreService;
 
-    // /api/books/search?search=검색어, 도서 검색(제목) - 검색창 사용
+    // http://localhost:8080/books/search?search=검색어, 도서 검색(제목) - 검색창 사용
     // full text index (n-gram parser 이용)쓸거임
-    @GetMapping("/search")
+    @GetMapping("books/search")
     public ResponseEntity<?> search(@RequestParam(name = "search") String search) {
         System.out.println("검색어 : " + search);
 
@@ -84,8 +55,8 @@ public class TbBookController {
 
     }
 
-    // /api/books/category/{category}, 도서 카테고리별 조회 (에세이, 문학, 시...) - 버튼 사용
-    @GetMapping("/category/{category}")
+    // http://localhost:8080books/category/{category}, 도서 카테고리별 조회 (에세이, 문학, 시...) - 버튼 사용
+    @GetMapping("books/category/{category}")
     public ResponseEntity<?> searchByCategory(@PathVariable String category) {
         // tb_books 테이블에서 카테고리 일치하는거 다 가져와
         List<TbBook> result = tbBookRepository.findAllByBookCategory(category);
@@ -100,11 +71,10 @@ public class TbBookController {
 
     }
 
-    private static final Logger log = LoggerFactory.getLogger(TbBookController.class);
-    // http://localhost:8080/api/books/isbn/9788936434595
+    // http://localhost:8080/book/9788936434595
     // 특정 ISBN의 도서 상세 정보 조회
     // 상세페이지에 키워드랑 알라딘 포함
-    @GetMapping("/isbn/{isbn}")
+    @GetMapping("book/{isbn}")
     public Mono<ResponseEntity<BookWithKeywordsDTO>> getBookWithKeywords(@PathVariable(name= "isbn") String isbn) {
         TbBook tbBook = tbBookService.getBookWithKeywords(isbn);
 
@@ -129,14 +99,18 @@ public class TbBookController {
         // TODO : 알라딘도 포함시켜서 리턴으로 수정
 //        return ResponseEntity.ok(bookWithKeywordsDTO);
         return tbBookStoreService.fetchBookStores(isbn)
-                .doFirst(() -> log.info("📌 fetchBookStores({}) 호출됨", isbn))
-                .doOnNext(bookStoreResponse -> log.info("📌 알라딘 API 응답: {}", bookStoreResponse))
-                .doOnTerminate(() -> log.info("📌 fetchBookStores 종료됨")) // ✅ 종료 로그 추가
-                .switchIfEmpty(Mono.fromRunnable(() -> log.warn("🚨 fetchBookStores 응답이 비어 있음!")))                .map(bookStoreResponse -> {
-                    bookWithKeywordsDTO.setBookStores(bookStoreResponse.getItemOffStoreList());
-                    log.info("📌 최종 DTO: {}", bookWithKeywordsDTO);
-
-                    return ResponseEntity.ok(bookWithKeywordsDTO);
+                .doOnNext(bookStoreResponse -> {
+                    System.out.println("bookStoreResponse 내용: " + bookStoreResponse);
+                })
+                .flatMap(bookStoreResponse -> {
+                    System.out.println("bookStoreResponse : " + bookStoreResponse.toString());
+                    if (bookStoreResponse.getItemOffStoreList() != null) {
+                        bookWithKeywordsDTO.setBookStores(bookStoreResponse.getItemOffStoreList());
+                    } else {
+                        System.out.println("itemOffStoreList is null!");
+                    }
+                    System.out.println("bookWithKeywordsDTO : " + bookWithKeywordsDTO.toString());
+                    return Mono.just(ResponseEntity.ok(bookWithKeywordsDTO));
                 });
     }
 }
