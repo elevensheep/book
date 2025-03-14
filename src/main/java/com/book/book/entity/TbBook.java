@@ -30,8 +30,8 @@ public class TbBook {
     private String bookImg;
 
 
-    @Column(name = "books_description")
-    @Lob // 대용량 텍스트 데이터임을 명시
+    @Lob // 대용량 텍스트 데이터
+    @Column(name = "books_description", columnDefinition = "TEXT")
     private String bookDescription;
 
     @Column(name = "books_category")
@@ -40,5 +40,16 @@ public class TbBook {
     // 책은 여러 키워드를 가질 수 있음. 데이터를 조회할 때, @OneToMany : TbBook을 조회하고 해당 책의 키워드를 함께 포함시키는 방법
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)  // Lazy loading 적용
     private List<TbBookKeyword> keywords;
+
+
+    public TbBook(String title, String image, String author, String publisher, String isbn, String description) {
+        this.bookTitle = title;
+        this.bookImg = image;
+        this.bookAuthor = author;
+        this.bookPublisher = publisher;
+        this.bookIsbn = isbn;
+        this.bookDescription = description;
+    }
+
 
 }

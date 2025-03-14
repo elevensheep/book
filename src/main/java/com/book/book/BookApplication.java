@@ -1,5 +1,6 @@
 package com.book.book;
 
+import com.book.book.service.NaverBookService;
 import com.book.book.service.TbBookStoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +8,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.reactive.config.EnableWebFlux;
 
 @EnableJpaRepositories(basePackages = "com.book.book.repository")
 @SpringBootApplication(scanBasePackages = "com.book.book")
+@EnableWebFlux
 public class BookApplication
 //		implements CommandLineRunner
 {
@@ -20,6 +23,8 @@ public class BookApplication
 		SpringApplication.run(BookApplication.class, args);
 	}
 
+
+}
 //	@Override
 //	public void run(String... args) throws Exception {
 //		if (args.length > 0) {
@@ -33,5 +38,3 @@ public class BookApplication
 //			System.out.println("itemId 파라미터가 필요합니다.");
 //		}
 //	}
-
-}

@@ -20,34 +20,46 @@ configurations {
 }
 
 repositories {
-	mavenCentral()
+	mavenCentral()  // 📌 반드시 존재해야 함
 }
 
 dependencies {
-	implementation 'mysql:mysql-connector-java:8.0.29'  // 예시로 버전 8.0.29를 사용
+	// ✅ 데이터베이스 관련
+	implementation 'mysql:mysql-connector-java:8.0.29'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// ✅ Spring Boot 기본 라이브러리
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	testImplementation 'org.springframework.security:spring-security-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.session:spring-session-jdbc'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.15.3'
+	// ✅ Lombok (컴파일 타임에만 필요)
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	// ✅ 테스트 관련
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	runtimeOnly 'com.mysql:mysql-connector-j'
+	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// ✅ 개발용 도구 (핫 리로드)
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	// ✅ OpenAPI 문서 (Swagger UI)
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
-	implementation 'org.springframework.boot:spring-boot-starter-xml'
+
+	// ✅ XML 파싱 관련 (Spring Boot 3.x에서는 제거 가능)
 	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
 	implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
-	implementation 'org.springframework.session:spring-session-jdbc'
+
+	// ✅ JSON Web Token (JWT) - 최신 버전으로 통일
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
 	implementation 'io.jsonwebtoken:jjwt-gson:0.12.5'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.5'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation 'io.jsonwebtoken:jjwt:0.11.5'  // 최신 버전 확인 후 설정
 
+	// 🔥 기존 `io.jsonwebtoken:jjwt:0.11.5`는 제거했음! (충돌 방지)
 }
 
 tasks.named('test') {
